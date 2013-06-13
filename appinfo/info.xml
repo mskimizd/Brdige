@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+    <id>Bridge</id>
+    <name>Bridge</name>
+    <description>Bridge</description>
+    <version>0.1</version>
+    <licence>AGPL</licence>
+    <author>Zhu Di</author>
+    <require>5</require>
+	<shipped>true</shipped>
+    <types>
+        <authentication/>
+    </types>
+</info>
