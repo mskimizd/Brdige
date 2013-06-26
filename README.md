@@ -12,10 +12,10 @@ Enable it <br />
 
 How to use it
 ------
-Choose Database Copy or Multiple Backends in the setting panel.
-Multiple Backends is automatic
-Database Copy can be automatic or manual
-If manaual style is chosen, click the import button to active the function.
+Choose Database Copy or Multiple Backends in the setting panel <br />
+Multiple Backends is automatic <br />
+Database Copy can be automatic or manual <br />
+If manaual style is chosen, click the import button to active the function <br />
 
 Configuration
 ------
