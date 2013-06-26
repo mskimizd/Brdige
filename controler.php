@@ -1,6 +1,6 @@
 <?php
 
-	include('apps/bridge/lib/database.php');
+	require_once('apps/bridge/lib/database.php');
 	
 	$db =new Database();
 	$db->copyUsersInfo();

@@ -1,6 +1,6 @@
 <?php
-include('apps/bridge/lib/user.php');
-include('apps/bridge/lib/email.php');
+require_once('apps/bridge/lib/user.php');
+require_once('apps/bridge/lib/email.php');
 
 class Database {
 	public $db_host;
@@ -28,20 +28,20 @@ class Database {
 	}
 	
 	public function copyUsersInfo(){
-		$q = 'SELECT username, user_email,group_id FROM '. $this->db_prefix .'users WHERE user_type = 0 OR user_type = 3';
+		$q = 'SELECT username, user_email, group_id FROM '. $this->db_prefix .'users WHERE user_type = 0 OR user_type = 3';
 		$result = mysql_query($q);
 		
 		while($row = mysql_fetch_assoc($result)){		
 			if(!empty($row['username'])) {	
-				if(!OC_User::userExists($row['username']))
+				if(!OC_User::userExists($row['username'])){
 					User::createUser($row['username']);
+					if(!empty($row['user_email']))
+						Email::sendEmail($row['username'],$row['user_email'], User::$password);					
+				}
 				$groupName=$this->getGroupNamebyId($row['group_id']);
 				if(!OC_Group::groupExists($groupName))
 					OC_Group::createGroup($groupName);
-				OC_Group::addToGroup($row['username'],$groupName);
-				//if(!empty($row['user_email'])){
-				//	Email::sendEmail($row['username'],$row['user_email'],User::$password);
-				//}
+				OC_Group::addToGroup($row['username'],$groupName);				
 			}
 		}
 	}

@@ -46,7 +46,7 @@ if(OC_User::isAdminUser(OC_User::getUser())) {
 
 	OCP\App::addNavigationEntry( array( 
 		'id'   => 'bridge_settings',
-		'order'=> 1,
+		'order'=> 20,
 		'href' => OC_Helper::linkTo( "bridge", "settings.php" ),
 		'icon' => OCP\Util::imagePath( 'bridge', 'bridge.png' ),
 		'name' => 'Bridge'
