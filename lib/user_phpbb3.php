@@ -2,18 +2,37 @@
 include('apps/bridge/lib/database.php');
 
 class OC_User_phpbb3 extends OC_User_Backend {
-    protected $all_users;
-	protected $db;	
+	public $db_host;
+	public $db_name;
+	public $db_user;
+	public $db_password;
+	public $db_prefix;
+	public $db_conn = false;
+	public $db;	
+    protected $all_users;	
 	
 	function __construct() {
-		$this->db =new Database();
-	}	
+		$this->db_host = OC_Appconfig::getValue('bridge', 'db_host','');
+		$this->db_name = OC_Appconfig::getValue('bridge', 'db_name','');
+		$this->db_user = OC_Appconfig::getValue('bridge', 'db_user','');
+		$this->db_password = OC_Appconfig::getValue('bridge', 'db_password','');
+		$this->db_prefix = OC_Appconfig::getValue('bridge', 'db_prefix','');	
+		
+		$this->db_conn = mysql_connect($this->db_host,$this->db_user,$this->db_password);
+		mysql_select_db($this->db_name, $this->db_conn);	
+		
+		if (!$this->db_conn)
+		{
+			die('Could not connect: ' . mysql_error());
+		}
+		$this->db =new Database();		
+	}
 
 	public function getAllUsers() {
 		
 		$users = array();		
 	
-		$q = 'SELECT username FROM phpbb_users WHERE user_type = 0 OR user_type = 3';
+		$q = 'SELECT username FROM '.$this->db_prefix.'users WHERE user_type = 0 OR user_type = 3';
 		$result = mysql_query($q);
 		while ($row = mysql_fetch_assoc($result)) {
 			if(!empty($row['username'])) {				
@@ -55,7 +74,8 @@ class OC_User_phpbb3 extends OC_User_Backend {
   }
   
   public function checkPassword($uid, $password){  
-    $query = 'SELECT username,user_password,group_id FROM phpbb_users WHERE username = "' . str_replace('"','""',$uid) . '"';
+	OC_Util::setupFS($uid);	  
+    $query = 'SELECT username,user_password,group_id FROM '.$this->db_prefix.'users WHERE username = "' . str_replace('"','""',$uid) . '"';
     $result = mysql_query($query);
     if ($result && mysql_num_rows($result)>0) {
       $row = mysql_fetch_assoc($result);
@@ -64,7 +84,7 @@ class OC_User_phpbb3 extends OC_User_Backend {
     $check = $wp_hasher->CheckPassword($password, $hash);
     
       if ($check==true) {
-		$this->db->getGroupNamebyId($row['group_id']);
+		$groupName=$this->db->getGroupNamebyId($row['group_id']);
 		if(!OC_Group::groupExists($groupName))
 			OC_Group::createGroup($groupName);		
 		OC_Group::addToGroup( $uid, $groupName);
@@ -75,7 +95,7 @@ class OC_User_phpbb3 extends OC_User_Backend {
   }
   public function userExists($uid) {
 	OC_Util::setupFS($uid);	  
-    $q = 'SELECT username FROM phpbb_users WHERE username = "' . str_replace('"','""',$uid) . '"';
+    $q = 'SELECT username FROM '.$this->db_prefix.'users WHERE username = "' . str_replace('"','""',$uid) . '"';
     $result = mysql_query($q);
     if ($result && mysql_num_rows($result)>0) {
       return true;
