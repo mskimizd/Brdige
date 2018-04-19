@@ -1,4 +1,4 @@
-Brdige
+ownCloud-phpBB-Brdige
 ======
 
 An ownCloud application implemented to authenticate users in the phpBB forum
