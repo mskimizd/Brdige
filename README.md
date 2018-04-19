@@ -1,4 +1,4 @@
-ownCloud-phpBB-Brdige
+ownCloud-phpBB-Bridge
 ======
 
 An ownCloud application implemented to authenticate users in the phpBB forum
